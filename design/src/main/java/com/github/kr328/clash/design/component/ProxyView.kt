@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.View
+import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.RadioButton
 import com.github.kr328.clash.common.compat.getDrawableCompat
@@ -39,9 +40,12 @@ class ProxyView(
         contentDescription = nextText
 
         if (changed) {
-            notifyViewAccessibilityStateChangedIfNeeded(
-                AccessibilityNodeInfo.CONTENT_CHANGE_TYPE_STATE_DESCRIPTION
-            )
+            AccessibilityEvent.obtain(AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED).also {
+                it.contentChangeTypes =
+                    AccessibilityEvent.CONTENT_CHANGE_TYPE_CONTENT_DESCRIPTION or
+                            AccessibilityEvent.CONTENT_CHANGE_TYPE_STATE_DESCRIPTION
+                sendAccessibilityEventUnchecked(it)
+            }
         }
     }
 
