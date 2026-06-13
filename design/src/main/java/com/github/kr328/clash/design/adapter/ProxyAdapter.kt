@@ -35,6 +35,7 @@ class ProxyAdapter(
             isClickable = isSelector
 
             current.update(true)
+            updateAccessibility(isSelector)
         }
     }
 

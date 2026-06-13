@@ -5,6 +5,8 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.view.View
+import android.view.accessibility.AccessibilityNodeInfo
+import android.widget.RadioButton
 import com.github.kr328.clash.common.compat.getDrawableCompat
 import com.github.kr328.clash.design.store.UiStore
 
@@ -18,7 +20,41 @@ class ProxyView(
     }
 
     var state: ProxyViewState? = null
+    private var accessibilitySelectable: Boolean = false
+    private var accessibilitySelected: Boolean = false
+    private var accessibilityText: String = ""
+
     constructor(context: Context) : this(context, ProxyViewConfig(context, 2))
+
+    fun updateAccessibility(selectable: Boolean) {
+        accessibilitySelectable = selectable
+
+        val current = state ?: return
+        val nextText = current.accessibilityText
+        val nextSelected = current.selectedNow
+        val changed = accessibilityText != nextText || accessibilitySelected != nextSelected
+
+        accessibilityText = nextText
+        accessibilitySelected = nextSelected
+        contentDescription = nextText
+
+        if (changed) {
+            notifyViewAccessibilityStateChangedIfNeeded(
+                AccessibilityNodeInfo.CONTENT_CHANGE_TYPE_STATE_DESCRIPTION
+            )
+        }
+    }
+
+    override fun onInitializeAccessibilityNodeInfo(info: AccessibilityNodeInfo) {
+        super.onInitializeAccessibilityNodeInfo(info)
+
+        if (accessibilitySelectable) {
+            info.className = RadioButton::class.java.name
+            info.isCheckable = true
+            info.isChecked = accessibilitySelected
+        }
+    }
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val state = state ?: return super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
@@ -60,8 +96,10 @@ class ProxyView(
     override fun draw(canvas: Canvas) {
         val state = state ?: return super.draw(canvas)
 
-        if (state.update(false))
+        if (state.update(false)) {
+            updateAccessibility(accessibilitySelectable)
             postInvalidate()
+        }
 
         val width = width.toFloat()
         val height = height.toFloat()

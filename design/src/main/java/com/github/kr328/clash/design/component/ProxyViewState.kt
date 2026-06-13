@@ -32,6 +32,16 @@ class ProxyViewState(
 
     private var lastFrameTime = System.currentTimeMillis()
 
+    val selectedNow: Boolean
+        get() = selected
+
+    val accessibilityText: String
+        get() = listOfNotNull(
+            title.takeIf { it.isNotBlank() },
+            subtitle.takeIf { it.isNotBlank() },
+            delayText.takeIf { it.isNotBlank() }?.let { "${it}ms" },
+        ).joinToString(", ")
+
     fun update(snap: Boolean): Boolean {
         val frameTime = System.currentTimeMillis()
         var invalidate = false

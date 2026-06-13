@@ -169,3 +169,12 @@ Do not edit generated or cache output by hand:
 - For native bridge changes, verify Kotlin `external` signatures, JNI/C functions, Go exports, and model serialization names stay aligned.
 - For UI changes, verify data binding variable names match layout usage and `Design` update methods run on the main dispatcher.
 - If tests are requested, first confirm available Gradle test tasks because this repository currently has no checked-in `test` or `androidTest` source tree.
+
+## Current Accessibility Task Handoff
+
+- Goal: fix TalkBack labels on the profiles screen and proxy selection screen without putting control types or selected state text into labels.
+- Planned profile changes: make the update-all toolbar action use `@string/update_all`, and make each profile row's trailing menu read as `<profile name> more options`.
+- Planned proxy changes: make self-drawn `ProxyView` expose a `contentDescription` from non-empty `title`, `subtitle`, and `delayText + "ms"` joined with `, `; expose selectable proxy rows as radio-button semantics through `AccessibilityNodeInfo` with `isCheckable`/`isChecked`.
+- Build plan: do not run a full local assemble unless explicitly requested because local disk space is constrained. Push to the fork and use the existing `.github/workflows/build-debug.yaml` workflow, then download the universal APK from the run's `Artifacts`.
+- Verification expectations: profile update-all should read "Update All"/localized equivalent, profile row menus should read the profile name plus more options, proxy rows should read visible business text such as `title, subtitle, 123ms`, and selected state should be announced by TalkBack from node state rather than label text.
+- Execution status: implementation completed locally; lightweight checks and GitHub Actions result should be recorded in the final assistant response for this task.

@@ -200,6 +200,7 @@
     <string name="http">HTTP</string>
     <string name="compatible">兼容</string>
     <string name="format_update_provider_failure">更新 %1$s: %2$s</string>
+    <string name="format_profile_more_options">%s 更多選項</string>
     <string name="update_all">更新全部</string>
     <string name="proxy_empty_tips">沒有可以顯示的組</string>
     <string name="reverse">反轉</string>

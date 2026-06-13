@@ -54,7 +54,7 @@
                         android:layout_marginStart="@dimen/item_tailing_margin"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:clickable="true"
-                        android:contentDescription="@string/_new"
+                        android:contentDescription="@string/update_all"
                         android:focusable="true"
                         android:onClick="@{() -> self.requestUpdateAll()}"
                         android:padding="@dimen/toolbar_image_action_padding"
